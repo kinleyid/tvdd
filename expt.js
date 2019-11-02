@@ -65,7 +65,7 @@ timeline.push({
 */
 
 var cue_words = [];
-var delays = ['1 week', '1 month', '6 months', '1 year'];
+var delays = ['1 week', '1 month', '6 months', '12 months'];
 var event_titles = []; // Participant's event titles
 for (i = 0; i < delays.length; i++) {
 	timeline.push({
@@ -82,9 +82,6 @@ for (i = 0; i < delays.length; i++) {
 				columns: 100
 			},
 		],
-		on_start: function(trial) {
-			console.log('Hello');
-		},
 		on_finish: function(data) {
 			var resp = JSON.parse(data.responses);
 			event_titles.push(resp.Q0);
@@ -105,7 +102,7 @@ timeline.push({ // Post-EFT task instructions
 	],
 	show_clickable_nav: true
 });
-*/
+
 var post_eft_qs = [
 	'Was your mental image of the event faint or vivid?',
 	'Was the location of the event familiar to you?',
@@ -151,19 +148,25 @@ for (i = 0; i < delays.length; i++) { // Questions for each event title
 		})
 	}
 }
-
+*/
 /*
 	DELAY DISCOUNTING TASK
 */
-/*
+
 var dd_data = { // Global variable for tracking the progress of the delay discounting task
+	mon_amts: [50, 100],
 	immediate_value: 50,
 	delayed_value: 100,
-	delay_text: 'in ' + 100 + ' days',
-	immediate_text: 'now',
-	div_pre: '<div style="height: 100px; width: 150px;">',
-	trial_count: 0,
-	max_trials: 5
+	// Cued delays: 1 week, 1 month, 6 months, 12 months
+	// Uncued delays: 2 weeks, 2 months, 8 months, 14 months
+	delays: ['7 days', '14 days', '30 days', '60 days', '180 days', '240 days', '360 days', '420 days'],
+	cued: [true, false, true, false, true, false, true, false],
+	cue_count: 0, // Which cue are we on?
+	delay_count: 0, // Which delay are we on?
+	max_trials: 5, // How many trials per delay?
+	trial_count: 0, // Which trial are we on in the current delay?
+	div_pre: '<div style="height: 100px; width: 250px;">', // To ensure consistent button sizes
+	div_post: '</div>'
 };
 var dd_instructions = {
 	type: 'instructions',
@@ -177,21 +180,14 @@ var dd_instructions = {
 };
 var dd_trial = {
 	type: 'html-button-response',
-	stimulus: function() {
-		var retval = EVENT_NAME;
-		if (retval != '') {
-			retval = 'Imagine ' + retval;
-		}
-		retval = retval + '</br></br>';
-		return retval;
-	},
-	choices: ['', ''],
+	stimulus: '', // Am I allowed to just not specify one?
+	choices: ['', ''], // Placeholders
 	post_trial_gap: 500,
-	data: {},
+	data: {}, // Placeholder
 	on_start: function(trial) {
 		if (dd_data.trial_count > 0) {
 			var last_data = jsPsych.data.getLastTimelineData().values()[0];
-			var inc = dd_data.delayed_value/4*0.5**(dd_data.trial_count - 1);
+			var inc = dd_data.delayed_value/4*0.5**(dd_data.trial_count - 1); // Amount by which immediate quantity is incremented
 			if (last_data.button_pressed == last_data.order) { // Immediate choice was made
 				dd_data.immediate_value -= inc;
 			} else { // Delayed choice was made
@@ -203,16 +199,22 @@ var dd_trial = {
 			delayed_value: Math.round(dd_data.delayed_value), // Dollar value of delayed reward
 			delay_text: dd_data.delay_text, // Display text specifying delay
 			immediate_text: dd_data.immediate_text, // Display text specifying delay
-			order: Math.round(Math.random()) // Order in which buttons appear
+			order: Math.round(Math.random()) // Order in which buttons appear; 0 = imm, del; 1 = del, imm
 		}
 		var imm = dd_data.div_pre +
 			'<p>$' + trial.data.immediate_value + '</p>' +
-			'<p>' + trial.data.immediate_text + '</p>' +
-			'</div>';
+			'<p>now</p>' +
+			dd_data.div_post;
+		if (dd_data.cued[dd_data.delay_count]) {
+			var tag = '<p>(' + event_titles[dd_data.cue_count] + ')</p>';
+		} else {
+			var tag = '';
+		}
 		var del = dd_data.div_pre +
 			'<p>$' + trial.data.delayed_value + '</p>' +
-			'<p>' + trial.data.delay_text + '</p>' +
-			'</div>';
+			'<p>in ' + dd_data.delays[dd_data.delay_count] + '</p>' +
+			tag + 
+			dd_data.div_post;
 		if (trial.data.order == 0) {
 			trial.choices = [imm, del];
 		} else {
@@ -225,16 +227,23 @@ var dd_trial = {
 var dd_loop = {
 	timeline: [dd_trial],
 	loop_function: function(data) {
-		if (dd_data.trial_count == dd_data.max_trials) {
-			return false;
-		} else {
-			return true;
+		if (dd_data.trial_count == dd_data.max_trials) { // Increment the delay counter
+			dd_data.delay_count++;
+			if (dd_data.delay_count == dd_data.delays.length) { // Exit if we're done all the delays
+				return false;
+			} // Else reset everything
+			if (dd_data.cued[dd_data.delay_count]) {
+				dd_data.cue_count++;
+			}
+			dd_data.trial_count = 0;
+			dd_data.immediate_value = dd_data.mon_amts[0];
 		}
+		return true; // Else continue the loop
 	}
 };
 
 timeline.push(dd_instructions, dd_loop);
-*/
+
 jsPsych.init({
 	timeline: timeline
 });
