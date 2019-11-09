@@ -181,7 +181,7 @@ timeline.push(des);
 
 var preambles= 'Select the number to show what percentage of the time this happens to you.';
 
-questions = [ 
+var questions = [
 	'Some people have the experience of driving or riding in a car or bus or subway and suddenly realizing that they don’t remember what has happened during all or part of the trip.', 
 	'Some people find that sometimes they are listening to someone talk and they suddenly realize that they did not hear part or all of what was said.',
 	'Some people have the experience of finding themselves in a place and have no idea how they got there.',
