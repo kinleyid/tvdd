@@ -1,6 +1,6 @@
 var pIDdigs = 100000000;
 var participant_id = Math.floor(pIDdigs + Math.random() * (9 * pIDdigs - 1));
-var slider_width = '500px'; // Slider width for visual analog scales
+var slider_width = 650; // Slider width in pixels for visual analog scales
 
 jsPsych.data.addProperties({
 	participant_id: participant_id
@@ -60,9 +60,9 @@ var psiq = {
 	type: 'instructions', 
 	pages: [
 		'Plymouth Sensory Image Questionnaire<br><br><br><br>',
-		'Please try to form the images described below and rate each mental image on the following scale:',
+		'Please try to form the images described and rate each mental image on the following scale:<br><br>' +
 		'0 (no image at all) to 10 (image as clear and vivid as real life)', 
-		'Tick the appropriate box for each item. Please rate every item.'
+		'Move the slider to the appropriate location for each item. Please rate every item.'
 	], 
 	show_clickable_nav: true
 };
@@ -70,13 +70,13 @@ var psiq = {
 timeline.push(psiq);
 
 var preambles = [ 
-	'<b>Imagine the appearance of</b>:',
-	'<b>Imagine the sound of</b>:',
-	'<b>Imagine the smell of</b>:',
-	'<b>Imagine the taste of</b>:',
-	'<b>Imagine touching</b>:',
-	'<b>Imagine the bodily sensation of</b>:',
-	'<b>Imagine feeling</b>:'
+	'Imagine the appearance of:',
+	'Imagine the sound of:',
+	'Imagine the smell of:',
+	'Imagine the taste of:',
+	'Imagine touching:',
+	'Imagine the bodily sensation of:',
+	'Imagine feeling:'
 ];
 
 var texts = [
@@ -137,14 +137,15 @@ var psiq = {
 	max: 10,
 	step: 1,
 	start: 5, 
-	slider_width: 650,
+	slider_width: slider_width,
+	skip_btn: true,
 	labels: ['0<br>No image at all', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10<br>Image as clear and vivid as real life'],
 	timeline: []
 };
 
 for (i = 0; i < preambles.length; i++) {
 	for (j = 0; j < texts[i].length; j++) {
-		psiq.timeline.push({stimulus: preambles[i] + '<br><br>' + texts[i][j]})
+		psiq.timeline.push({stimulus: '<b>' + preambles[i] + '</b><br><br>' + texts[i][j] + '<br><br>'})
 	}
 }
 
@@ -172,14 +173,14 @@ var des = {
 		'For example:<br> 0% <b>(Never)</b> 10 20 30 40 50 60 70 80 90 100% <b>(Always)</b>',
 		'There are 28 questions.',
 		'<b>Disclaimer</b>: This self-assessment tool is not a substitute for clinical diagnosis or advice'
-	], 
+	],
 	show_clickable_nav: true
 };
 
 timeline.push(des);
 
 var preambles= [
- 'Select the number to show what percentage of the time this happens to you.<br><br>' 
+	'Select the number to show what percentage of the time this happens to you.<br><br>' 
 ];
 
 questions = [ 
@@ -215,17 +216,14 @@ questions = [
 
 var des = {
 	type: 'html-slider-response',
-	min: 0,
-	max: 100,
-	step: 1,
-	start: 50, 
-	slider_width: 650,
+	slider_width: slider_width,
+	skip_btn: true,
 	labels: ['0%<br>Never', '10', '20', '30', '40', '50', '60', '70', '80', '90', '100%<br>Always'],	
 	timeline: []
 };
 
 for (i = 0; i < questions.length; i++) {
-	des.timeline.push({stimulus: preambles + '<br><br>' + questions[i]})
+	des.timeline.push({stimulus: preambles + '<br><br>' + questions[i] + '<br><br>'})
 }
 
 timeline.push(des);
@@ -233,11 +231,9 @@ timeline.push(des);
 var conclusion = {
 	type: 'instructions', 
 	pages: [
-		'Thank you for completing the Dissociative Experiences Scale questionnaire.<br><br>'
-
-	], 
+		'Thank you for completing the Dissociative Experiences Scale questionnaire.'
+	],
 	show_clickable_nav: true
-
 };
 
 timeline.push(conclusion);
@@ -340,14 +336,15 @@ for (i = 0; i < delays.length; i++) { // Questions for each event title
 	for (j = 0; j < post_eft_qs.length; j++) {
 		timeline.push({
 			type: 'html-slider-response',
-			start: -20,
+			slider_width: slider_width,
 			stimulus: '', // Placeholders
 			labels: '',
 			skip_btn: true,
 			on_start: function(trial) { // Dynamically retrieve event titles and appropriate labels
 				trial.stimulus = event_titles[post_eft_iterators.i] +
 					'<br><br>' +
-					post_eft_qs[post_eft_iterators.j];
+					post_eft_qs[post_eft_iterators.j] +
+					'<br><br>';
 				trial.labels = post_eft_labels[post_eft_iterators.j]
 				// Update global iterators
 				if (post_eft_iterators.j == post_eft_qs.length - 1) {
