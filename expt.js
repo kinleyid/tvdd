@@ -179,9 +179,7 @@ var des = {
 
 timeline.push(des);
 
-var preambles= [
-	'Select the number to show what percentage of the time this happens to you.<br><br>' 
-];
+var preambles= 'Select the number to show what percentage of the time this happens to you.';
 
 questions = [ 
 	'Some people have the experience of driving or riding in a car or bus or subway and suddenly realizing that they don’t remember what has happened during all or part of the trip.', 
