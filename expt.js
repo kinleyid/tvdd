@@ -1,20 +1,46 @@
 var pIDdigs = 100000000;
 var participant_id = Math.floor(pIDdigs + Math.random() * (9 * pIDdigs - 1));
+var slider_width = '500px'; // Slider width for visual analog scales
+
+jsPsych.data.addProperties({
+	participant_id: participant_id
+});
+
+save_data = function() {
+	var form = document.createElement('form');
+	document.body.appendChild(form);
+	form.method = 'post';
+	form.action = 'saveData.php';
+	var data = {
+		txt: jsPsych.data.get().csv(),
+		pID: participant_id
+	}
+	var name;
+	for (name in data) {
+		var input = document.createElement('input');
+		input.type = 'hidden';
+		input.name = name;
+		input.value = data[name];
+		form.appendChild(input);
+	}
+	form.submit();
+}
 
 var timeline = [];
+
 /*
 	SET FULLSCREEN
 */
-/*
+
 timeline.push({
 	type: 'fullscreen',
 	fullscreen_mode: true
 });
-*/
+
 /*
 	DEMOGRAPHIC INFO
 */
-/*
+
 var age = {
 	type: 'survey-text',
 	questions: [{prompt: 'What is your age in years?'}],
@@ -25,17 +51,201 @@ var gender = {
 	questions: [{prompt: 'What is your gender?', options: ['Man', 'Woman', 'Other/prefer not to say'], horizontal: true}]
 };
 timeline.push(age, gender);
-*/
+
 /*
 	PSIQ
 */
+
+var psiq = {
+	type: 'instructions', 
+	pages: [
+		'Plymouth Sensory Image Questionnaire<br><br><br><br>',
+		'Please try to form the images described below and rate each mental image on the following scale:',
+		'0 (no image at all) to 10 (image as clear and vivid as real life)', 
+		'Tick the appropriate box for each item. Please rate every item.'
+	], 
+	show_clickable_nav: true
+};
+
+timeline.push(psiq);
+
+var preambles = [ 
+	'<b>Imagine the appearance of</b>:',
+	'<b>Imagine the sound of</b>:',
+	'<b>Imagine the smell of</b>:',
+	'<b>Imagine the taste of</b>:',
+	'<b>Imagine touching</b>:',
+	'<b>Imagine the bodily sensation of</b>:',
+	'<b>Imagine feeling</b>:'
+];
+
+var texts = [
+	[
+		'a friend you know well',
+		'a cat climbing a tree',
+		'a sunset',
+		'the front door of your house',
+		'a bonfire'
+	],
+	[
+		'an ambulance siren', 
+		'hands clapping in aplause',
+		'the mewing of a cat', 
+		'the sound of a car horn',
+		'the sound of children playing'
+	], 
+	[
+		'a stuffy room',
+		'a rose',
+		'fresh paint',
+		'newly cut glass',
+		'burning wood'
+	],
+	[
+		'mustard',
+		'toothpaste',
+		'lemon',
+		'sea water',
+		'black pepper'
+	],
+	[
+		'warm sand',
+		'a soft towel',
+		'a sunset',
+		'the front door of your house',
+		'a bonfire'
+	],
+	[
+		'relaxing in a warm bath',
+		'having a sore throat',
+		'threading a needle',
+		'jumping into a swimming pool',
+		'walking briskly in the cold'
+	],
+	[
+		'excited',
+		'relieved',
+		'furious',
+		'in love',
+		'scared'
+	]
+];
+
+var psiq = {
+	type: 'html-slider-response',
+	min: 0,
+	max: 10,
+	step: 1,
+	start: 5, 
+	slider_width: 650,
+	labels: ['0<br>No image at all', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10<br>Image as clear and vivid as real life'],
+	timeline: []
+};
+
+for (i = 0; i < preambles.length; i++) {
+	for (j = 0; j < texts[i].length; j++) {
+		psiq.timeline.push({stimulus: preambles[i] + '<br><br>' + texts[i][j]})
+	}
+}
+
+timeline.push(psiq);
+
+var transition = {
+	type: 'instructions', 
+	pages: [
+		'Thank you for completing the Plymouth Sensory Image Questionnaire. <br><br> Now The Dissociative Experiences Scale questionnaire will begin.<br><br>'
+	], 
+	show_clickable_nav: true
+};
+
+timeline.push(transition);
+
 /*
 	DES
 */
+
+var des = {
+	type: 'instructions', 
+	pages: [
+		'This questionnaire asks about experiences that you may have in your daily life. We are interested in how often you have these experiences.<br><br> It is important, however, that your answers show how often these experiences happen to you when you are not under the influence of alcohol or drugs.',
+		'To answer the questions, please determine to what degree each experience described in the question applies to you, and select the number to show what percentage of the time you have the experience.',
+		'For example:<br> 0% <b>(Never)</b> 10 20 30 40 50 60 70 80 90 100% <b>(Always)</b>',
+		'There are 28 questions.',
+		'<b>Disclaimer</b>: This self-assessment tool is not a substitute for clinical diagnosis or advice'
+	], 
+	show_clickable_nav: true
+};
+
+timeline.push(des);
+
+var preambles= [
+ 'Select the number to show what percentage of the time this happens to you.<br><br>' 
+];
+
+questions = [ 
+	'Some people have the experience of driving or riding in a car or bus or subway and suddenly realizing that they don’t remember what has happened during all or part of the trip.', 
+	'Some people find that sometimes they are listening to someone talk and they suddenly realize that they did not hear part or all of what was said.',
+	'Some people have the experience of finding themselves in a place and have no idea how they got there.',
+	'Some people have the experience of finding themselves dressed in clothes that they don’t remember putting on.',
+	'Some people have the experience of finding new things among their belongings that they do not remember buying.',
+	'Some people sometimes find that they are approached by people that they do not know, who call them by another name or insist that they have met them before.', 
+	'Some people sometimes have the experience of feeling as though they are standing next to themselves or watching themselves do something and they actually see themselves as if they were looking at another person.', 
+	'Some people are told that they sometimes do not recognize friends of family members.',
+	'Some people find that they have no memory for some important events in their lives (for example, a wedding or graduation).', 
+	'Some people have the experience of being accused of lying when they do not think that they have lied.',
+	'Some people have the experience of looking in a mirror and not recognizing themselves.',
+	'Some people have the experience of feeling that other people, objects, and the world around them are not real.',
+	'Some people have the experience of feeling that their body does not seem to belong to them.',
+	'Some people have the experience of sometimes remembering a past event so vividly that they feel as if they were reliving that event.',
+	'Some people have the experience of not being sure whether things that they remember happening really did happen or whether they just dreamed them.',
+	'Some people have the experience of being in a familiar place but finding it strange and unfamiliar.',
+	'Some people find that when they are watching television or a movie they become so absorbed in the story that they are unaware of other events happening around them.', 
+	'Some people find that they become so involved in a fantasy or daydream that it feels as though it were really happening to them.',
+	'Some people find that they sometimes are able to ignore pain.',
+	'Some people find that they sometimes sit staring off into space, thinking of nothing, and are not aware of the passage of time.', 
+	'Some people sometimes find that when they are alone they talk out loud to themselves.',
+	'Some people find that in one situation they may act so differently compared with another situation that they feel almost as if they were two different people.',
+	'Some people sometimes find that in certain situations they are able to do things with amazing ease and spontaneity that would usually be difficult for them (for example, sports, work, social situations, etc.).', 
+	'Some people sometimes find that they cannot remember whether they have done something or have just thought about doing that thing (for example, not knowing whether they have just mailed a letter or have just thought about mailing it).', 
+	'Some people find evidence that they have done things that they do not remember doing.',
+	'Some people sometimes find writings, drawings, or notes among their belongings that they must have done but cannot remember doing.', 
+	'Some people sometimes find that they hear voices inside their head that tell them to do things or comment on things that they are doing.', 
+	'Some people sometimes feel as if they are looking at the world through a fog, so that people and objects appear far away or unclear.'
+];
+
+var des = {
+	type: 'html-slider-response',
+	min: 0,
+	max: 100,
+	step: 1,
+	start: 50, 
+	slider_width: 650,
+	labels: ['0%<br>Never', '10', '20', '30', '40', '50', '60', '70', '80', '90', '100%<br>Always'],	
+	timeline: []
+};
+
+for (i = 0; i < questions.length; i++) {
+	des.timeline.push({stimulus: preambles + '<br><br>' + questions[i]})
+}
+
+timeline.push(des);
+
+var conclusion = {
+	type: 'instructions', 
+	pages: [
+		'Thank you for completing the Dissociative Experiences Scale questionnaire.<br><br>'
+
+	], 
+	show_clickable_nav: true
+
+};
+
+timeline.push(conclusion);
+
 /*
 	EFT INSTRUCTIONS
 */
-/*
+
 timeline.push({
 	type: 'instructions',
 	pages: [
@@ -59,12 +269,12 @@ timeline.push({
 	],
 	show_clickable_nav: true
 });
-*/
+
 /*
 	EFT TASK
 */
 
-var cue_words = [];
+var cue_words = ['ANIMAL','APPLE','ARM','ARMY','ARTIST','AUTOMOBILE','AVENUE','BABY','BAR','BATH','BEAR','BED','BIRD','BLACK','BLOOD','BLUE','BOARD','BODY','BOOK','BOTTLE','BOWL','BOY','BRAIN','BREAD','BREAST','BUILDING','BURN','BUTTER','CAMP','CANDY','CAR','CARS','CASH','CAT','CELL','CHAIR','CHEESE','CHILD','CHILDREN','CHRISTMAS','CHURCH','CIRCLE','CITY','CLOCK','CLOTHING','COAST','COFFEE','COIN','COLLEGE','CORN','CORNER','COTTAGE','DARK','DIAMOND','DINNER','DOCTOR','DOGS','DOLL','DOLLAR','DOOR','DOORS','DRESS','DUST','EARTH','ENGINE','FACTORY','FAMILY','FAT','FEET','FINGERS','FIRE','FLAG','FLOOD','FLOWER','FOOT','FOREHEAD','FOREST','FORK','FRIEND','FRUIT','FUR','FURNITURE','GENTLEMAN','GIFT','GIRL','GOLD','GRANDMOTHER','GRASS','GREEN','GUNS','HALL','HAND','HANDS','HEAD','HOME','HORSE','HOSPITAL','HOT','HOTEL','HOUSE','HUSBAND','INDUSTRY','INSECT','INSTRUMENT','IRON','JUDGE','KING','KISS','LADIES','LAKE','LAMP','LETTER','LIBRARY','LIGHT','LIP','LIQUOR','LOVE','MACHINE','MAGAZINE','MAN','MARRIAGE','MARRIED','MEAT','METAL','MONEY','MOON','MORNING','MOTHER','MOUNTAIN','NAIL','NEEDLE','NEWSPAPER','NOVEL','OCEAN','OFFICE','OFFICER','OVEN','PAINT','PAPER','PARENTS','PARTY','PEACH','PENCIL','PEOPLE','PERSON','PHOTOGRAPH','PHYSICIAN','PICTURE','PIPE','PLANT','POTATO','PROFESSOR','PUPIL','QUARTER','QUEEN','RED','RIVER','ROCK','ROD','ROOM','SALT','SEA','SEAT','SHADOW','SHIP','SHOES','SHORE','SHOULDER','SKIN','SKY','SNOW','SOIL','SON','SQUARE','STAR','STEAM','STONE','STORM','STOVE','STREET','STRING','STUDENT','SUGAR','TABLE','TEACHER','TICKET','TOBACCO','TOOL','TOY','TREE','UNIVERSITY','VEGETABLE','WALL','WATER','WEAPON','WHEAT','WHITE','WIFE','WINDOW','WINE','WINTER','WOMAN','WORLD','YELLOW',];
 var delays = ['1 week', '1 month', '6 months', '12 months'];
 var event_titles = []; // Participant's event titles
 for (i = 0; i < delays.length; i++) {
@@ -92,7 +302,7 @@ for (i = 0; i < delays.length; i++) {
 /*
 	POST-EFT TASK
 */
-/*
+
 timeline.push({ // Post-EFT task instructions
 	type: 'instructions',
 	pages: [
@@ -130,8 +340,10 @@ for (i = 0; i < delays.length; i++) { // Questions for each event title
 	for (j = 0; j < post_eft_qs.length; j++) {
 		timeline.push({
 			type: 'html-slider-response',
+			start: -20,
 			stimulus: '', // Placeholders
 			labels: '',
+			skip_btn: true,
 			on_start: function(trial) { // Dynamically retrieve event titles and appropriate labels
 				trial.stimulus = event_titles[post_eft_iterators.i] +
 					'<br><br>' +
@@ -148,7 +360,7 @@ for (i = 0; i < delays.length; i++) { // Questions for each event title
 		})
 	}
 }
-*/
+
 /*
 	DELAY DISCOUNTING TASK
 */
@@ -245,5 +457,6 @@ var dd_loop = {
 timeline.push(dd_instructions, dd_loop);
 
 jsPsych.init({
-	timeline: timeline
+	timeline: timeline,
+	on_finish: save_data
 });
