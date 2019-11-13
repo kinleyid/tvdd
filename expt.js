@@ -59,7 +59,7 @@ timeline.push(age, gender);
 var psiq = {
 	type: 'instructions', 
 	pages: [
-		'Plymouth Sensory Image Questionnaire<br><br><br><br>',
+		'PSIQ<br><br><br><br>',
 		'Please try to form the images described and rate each mental image on the following scale:<br><br>' +
 		'0 (no image at all) to 10 (image as clear and vivid as real life)', 
 		'Move the slider to the appropriate location for each item. Please rate every item.'
@@ -154,7 +154,7 @@ timeline.push(psiq);
 var transition = {
 	type: 'instructions', 
 	pages: [
-		'Thank you for completing the Plymouth Sensory Image Questionnaire. <br><br> Now The Dissociative Experiences Scale questionnaire will begin.<br><br>'
+		'Thank you for completing the PSIQ. <br><br> Now The DES questionnaire will begin.<br><br>'
 	], 
 	show_clickable_nav: true
 };
@@ -172,14 +172,13 @@ var des = {
 		'To answer the questions, please determine to what degree each experience described in the question applies to you, and select the number to show what percentage of the time you have the experience.',
 		'For example:<br> 0% <b>(Never)</b> 10 20 30 40 50 60 70 80 90 100% <b>(Always)</b>',
 		'There are 28 questions.',
-		'<b>Disclaimer</b>: This self-assessment tool is not a substitute for clinical diagnosis or advice'
 	],
 	show_clickable_nav: true
 };
 
 timeline.push(des);
 
-var preambles= 'Select the number to show what percentage of the time this happens to you.';
+var preambles= 'Select a number to show what percentage of the time this happens to you.';
 
 var questions = [
 	'Some people have the experience of driving or riding in a car or bus or subway and suddenly realizing that they don’t remember what has happened during all or part of the trip.', 
@@ -229,7 +228,7 @@ timeline.push(des);
 var conclusion = {
 	type: 'instructions', 
 	pages: [
-		'Thank you for completing the Dissociative Experiences Scale questionnaire.'
+		'Thank you for completing the DES questionnaire.'
 	],
 	show_clickable_nav: true
 };
@@ -361,7 +360,7 @@ for (i = 0; i < delays.length; i++) { // Questions for each event title
 */
 
 var dd_data = { // Global variable for tracking the progress of the delay discounting task
-	mon_amts: [50, 100],
+	mon_amts: [400, 800],
 	immediate_value: 50,
 	delayed_value: 100,
 	// Cued delays: 1 week, 1 month, 6 months, 12 months
