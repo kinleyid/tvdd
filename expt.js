@@ -55,11 +55,11 @@ timeline.push(age, gender);
 /*
 	PSIQ
 */
-
+/*
 var psiq = {
 	type: 'instructions', 
 	pages: [
-		'PSIQ<br><br><br><br>',
+		'First questionnaire: PSIQ<br><br><br><br>',
 		'Please try to form the images described and rate each mental image on the following scale:<br><br>' +
 		'0 (no image at all) to 10 (image as clear and vivid as real life)', 
 		'Move the slider to the appropriate location for each item. Please rate every item.'
@@ -89,7 +89,7 @@ var texts = [
 	],
 	[
 		'an ambulance siren', 
-		'hands clapping in aplause',
+		'hands clapping in applause',
 		'the mewing of a cat', 
 		'the sound of a car horn',
 		'the sound of children playing'
@@ -98,7 +98,7 @@ var texts = [
 		'a stuffy room',
 		'a rose',
 		'fresh paint',
-		'newly cut glass',
+		'newly cut grass',
 		'burning wood'
 	],
 	[
@@ -111,9 +111,9 @@ var texts = [
 	[
 		'warm sand',
 		'a soft towel',
-		'a sunset',
-		'the front door of your house',
-		'a bonfire'
+		'the point of a pin',
+		'icy water',
+		'fur'
 	],
 	[
 		'relaxing in a warm bath',
@@ -160,17 +160,17 @@ var transition = {
 };
 
 timeline.push(transition);
-
+*/
 /*
 	DES
 */
-
+/*
 var des = {
 	type: 'instructions', 
 	pages: [
 		'This questionnaire asks about experiences that you may have in your daily life. We are interested in how often you have these experiences.<br><br> It is important, however, that your answers show how often these experiences happen to you when you are not under the influence of alcohol or drugs.',
 		'To answer the questions, please determine to what degree each experience described in the question applies to you, and select the number to show what percentage of the time you have the experience.',
-		'For example:<br> 0% <b>(Never)</b> 10 20 30 40 50 60 70 80 90 100% <b>(Always)</b>',
+		'For example:<br> <b>(Never)</b> 0% 10 20 30 40 50 60 70 80 90 100% <b>(Always)</b>',
 		'There are 28 questions.',
 	],
 	show_clickable_nav: true
@@ -234,11 +234,11 @@ var conclusion = {
 };
 
 timeline.push(conclusion);
-
+*/
 /*
 	EFT INSTRUCTIONS
 */
-
+/*
 timeline.push({
 	type: 'instructions',
 	pages: [
@@ -249,8 +249,8 @@ timeline.push({
 			'1. You have actually planned or could realistically happen</br>' +
 			'2. Would happen at a specific time</br>' +
 			'3. Would happen at a specific place</br>' +
-			'3. Would not last longer than a day</br>' +
-			'4. Are distinct and have not happened yet',
+			'4. Would not last longer than a day</br>' +
+			'5. Are distinct and have not happened yet',
 		'Examples of events that are NOT appropriate for this study:</br></br>' + 
 			'1. Commuting to school (Has already happened many times)</br>' +
 			'2. Going to classes (Not specific and takes more than a day)</br>' +
@@ -262,7 +262,7 @@ timeline.push({
 	],
 	show_clickable_nav: true
 });
-
+*/
 /*
 	EFT TASK
 */
@@ -361,8 +361,8 @@ for (i = 0; i < delays.length; i++) { // Questions for each event title
 
 var dd_data = { // Global variable for tracking the progress of the delay discounting task
 	mon_amts: [400, 800],
-	immediate_value: 50,
-	delayed_value: 100,
+	immediate_value: null,
+	delayed_value: null,
 	// Cued delays: 1 week, 1 month, 6 months, 12 months
 	// Uncued delays: 2 weeks, 2 months, 8 months, 14 months
 	delays: ['7 days', '14 days', '30 days', '60 days', '180 days', '240 days', '360 days', '420 days'],
@@ -399,6 +399,9 @@ var dd_trial = {
 			} else { // Delayed choice was made
 				dd_data.immediate_value += inc;
 			}
+		} else {
+			dd_data.immediate_value = dd_data.mon_amts[0];
+			dd_data.delayed_value = dd_data.mon_amts[1];
 		}
 		trial.data = {
 			immediate_value: Math.round(dd_data.immediate_value), // Dollar value of immediate reward
