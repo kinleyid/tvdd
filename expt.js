@@ -55,7 +55,7 @@ timeline.push(age, gender);
 /*
 	PSIQ
 */
-/*
+
 var psiq = {
 	type: 'instructions', 
 	pages: [
@@ -160,11 +160,11 @@ var transition = {
 };
 
 timeline.push(transition);
-*/
+
 /*
 	DES
 */
-/*
+
 var des = {
 	type: 'instructions', 
 	pages: [
@@ -234,11 +234,17 @@ var conclusion = {
 };
 
 timeline.push(conclusion);
-*/
+
 /*
 	EFT INSTRUCTIONS
 */
-/*
+
+var eft_criteria = '1. You have actually planned or could realistically happen</br>' +
+	'2. Would happen at a specific time</br>' +
+	'3. Would happen at a specific place</br>' +
+	'4. Would not last longer than a day</br>' +
+	'5. Are distinct and have not happened yet';
+
 timeline.push({
 	type: 'instructions',
 	pages: [
@@ -246,11 +252,7 @@ timeline.push({
 		'The cue words are just to give you some inspiration; the future events you come up with do not have to be related to the words.',
 		'You will come up with 4 events that could happen in approximately 1 week, 1 month, 6 months, and 1 year, respectively.',
 		'These should be events that:</br></br>' +
-			'1. You have actually planned or could realistically happen</br>' +
-			'2. Would happen at a specific time</br>' +
-			'3. Would happen at a specific place</br>' +
-			'4. Would not last longer than a day</br>' +
-			'5. Are distinct and have not happened yet',
+			eft_criteria,
 		'Examples of events that are NOT appropriate for this study:</br></br>' + 
 			'1. Commuting to school (Has already happened many times)</br>' +
 			'2. Going to classes (Not specific and takes more than a day)</br>' +
@@ -262,7 +264,7 @@ timeline.push({
 	],
 	show_clickable_nav: true
 });
-*/
+
 /*
 	EFT TASK
 */
@@ -271,24 +273,33 @@ var cue_words = ['ANIMAL','APPLE','ARM','ARMY','ARTIST','AUTOMOBILE','AVENUE','B
 var delays = ['1 week', '1 month', '6 months', '12 months'];
 var event_titles = []; // Participant's event titles
 for (i = 0; i < delays.length; i++) {
-	timeline.push({
+	timeline.push({ // Trial for participants to decide on an event title
 		type: 'survey-text',
-		preamble: delays[i] + '<br>Cue: ' + cue_words.splice(Math.floor(cue_words.length*Math.random()), 1)[0],
-		questions: [
-			{
-				prompt: 'Event title:',
-				rows: 1
-			},
-			{
-				prompt: 'Detailed description',
-				rows: 10,
-				columns: 100
-			},
-		],
+		preamble:
+			'<br>Cue: <b>' + cue_words.splice(Math.floor(cue_words.length*Math.random()), 1)[0] + '</b>' +
+			'<br><br>Please think of an event in <b>' + delays[i] + '</b> that:<br><br>' +
+			eft_criteria,
+		questions: [{
+			prompt: 'Event title:',
+			rows: 1
+		}],
 		on_finish: function(data) {
 			var resp = JSON.parse(data.responses);
 			event_titles.push(resp.Q0);
 		}
+	});
+	timeline.push({ // Event elaboratoin
+		type:'survey-text',
+		on_start: function(trial) {
+			// Set preamble to title from previous trial
+			trial.preamble = '<b>' + event_titles[event_titles.length - 1] + '</b>';
+		},
+		preamble: null, // Will be populated in on_start function
+		questions: [{
+			prompt: 'Detailed description',
+			rows: 10,
+			columns: 100
+		}]
 	})
 }
 
