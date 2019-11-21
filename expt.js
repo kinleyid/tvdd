@@ -220,7 +220,7 @@ var des = {
 };
 
 for (i = 0; i < questions.length; i++) {
-	des.timeline.push({stimulus: preambles + '<br><br>' + questions[i] + '<br><br>'})
+	des.timeline.push({stimulus: questions[i] + '<br><br>' + preambles + '<br><br>'})
 }
 
 timeline.push(des);
