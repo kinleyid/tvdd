@@ -311,8 +311,8 @@ var post_eft_qs = [
 	'Was the location of the event familiar to you?',
 	'Was the general emotional tone of the event positive or negative?',
 	'Were the emotions associated with the event intense?',
-	'What percentage of the time did you see the scene from a first-person perspective?',
-	'When you saw the scene from a third-person perspective, did you see yourself in it?'
+	'What percentage of the time did you see the scene from a <b>first-person</b> perspective?',
+	'When you saw the scene from a <b>third-person</b> perspective, did you see yourself in it?'
 ];
 
 var post_eft_labels = [
@@ -329,28 +329,47 @@ var post_eft_iterators = {
 	j: 0
 }
 
+function update_iterators() {
+	// Update global iterators
+	if (post_eft_iterators.j == post_eft_qs.length - 1) {
+		post_eft_iterators.j = 0;
+		post_eft_iterators.i++;
+	} else {
+		post_eft_iterators.j++;
+	}
+}
+
 for (i = 0; i < delays.length; i++) { // Questions for each event title
 	for (j = 0; j < post_eft_qs.length; j++) {
 		timeline.push({
-			type: 'html-slider-response',
-			slider_width: slider_width,
-			stimulus: '', // Placeholders
-			labels: '',
-			skip_btn: true,
-			on_start: function(trial) { // Dynamically retrieve event titles and appropriate labels
-				trial.stimulus = event_titles[post_eft_iterators.i] +
-					'<br><br>' +
-					post_eft_qs[post_eft_iterators.j] +
-					'<br><br>';
-				trial.labels = post_eft_labels[post_eft_iterators.j]
-				// Update global iterators
+			conditional_function: function() {
+				// Only display the third-person question if it's applicable
 				if (post_eft_iterators.j == post_eft_qs.length - 1) {
-					post_eft_iterators.j = 0;
-					post_eft_iterators.i++;
+					if (jsPsych.data.get().last(1).values()[0].response == 100) {
+						update_iterators();
+						return false;
+					} else {
+						return true;
+					}
 				} else {
-					post_eft_iterators.j++;
+					return true;
 				}
-			}
+			},
+			timeline: [{
+				type: 'html-slider-response',
+				slider_width: slider_width,
+				stimulus: '', // Placeholders
+				labels: '',
+				skip_btn: true,
+				on_start: function(trial) { // Dynamically retrieve event titles and appropriate labels
+					trial.stimulus = event_titles[post_eft_iterators.i] +
+						'<br><br>' +
+						post_eft_qs[post_eft_iterators.j] +
+						'<br><br>';
+					trial.labels = post_eft_labels[post_eft_iterators.j]
+					update_iterators();
+				}
+			}]
 		})
 	}
 }
