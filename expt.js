@@ -433,15 +433,8 @@ var dd_trial = {
 			dd_data.immediate_value = dd_data.mon_amts[0];
 			dd_data.delayed_value = dd_data.mon_amts[1];
 		}
-		trial.data = {
-			immediate_value: Math.round(dd_data.immediate_value), // Dollar value of immediate reward
-			delayed_value: Math.round(dd_data.delayed_value), // Dollar value of delayed reward
-			delay_text: dd_data.delay_text, // Display text specifying delay
-			immediate_text: dd_data.immediate_text, // Display text specifying delay
-			order: Math.round(Math.random()) // Order in which buttons appear; 0 = imm, del; 1 = del, imm
-		}
 		var imm = dd_data.div_pre +
-			'<p>$' + trial.data.immediate_value + '</p>' +
+			'<p>$' + dd_data.immediate_value + '</p>' +
 			'<p>now</p>' +
 			dd_data.div_post;
 		if (dd_data.cued[dd_data.delay_count]) {
@@ -450,16 +443,25 @@ var dd_trial = {
 			var tag = '';
 		}
 		var del = dd_data.div_pre +
-			'<p>$' + trial.data.delayed_value + '</p>' +
+			'<p>$' + dd_data.delayed_value + '</p>' +
 			'<p>in ' + dd_data.delays[dd_data.delay_count] + '</p>' +
 			tag + 
 			dd_data.div_post;
-		if (trial.data.order == 0) {
+		var order = Math.round(Math.random()) // Order in which buttons appear; 0 = imm, del; 1 = del, imm
+		if (order == 0) {
 			trial.choices = [imm, del];
 		} else {
 			trial.choices = [del, imm];
 		}
 		dd_data.trial_count++;
+		trial.data = {
+			immediate_value: Math.round(dd_data.immediate_value), // Dollar value of immediate reward
+			delayed_value: Math.round(dd_data.delayed_value), // Dollar value of delayed reward
+			delay: dd_data.delays[dd_data.delay_count],
+			delay_text: del, // Display text specifying delay
+			immediate_text: imm, // Display text specifying delay
+			order: order
+		};
 	}
 };
 
