@@ -81,53 +81,53 @@ var preambles = [
 
 var texts = [
 	[
-		'a friend you know well',
-		'a cat climbing a tree',
+		'a bonfire',
 		'a sunset',
-		'the front door of your house',
-		'a bonfire'
+		'a cat climbing a tree',
+		'a friend you know well',
+		'the front door of your house'
 	],
 	[
-		'an ambulance siren', 
-		'hands clapping in applause',
-		'the mewing of a cat', 
 		'the sound of a car horn',
-		'the sound of children playing'
+		'hands clapping in applause',
+		'an ambulance siren',
+		'the sound of children playing',
+		'the mewing of a cat'
 	], 
 	[
-		'a stuffy room',
+		'newly cut grass',
+		'burning wood',
 		'a rose',
 		'fresh paint',
-		'newly cut grass',
-		'burning wood'
+		'a stuffy room'
 	],
 	[
+		'black pepper',
+		'lemon',
 		'mustard',
 		'toothpaste',
-		'lemon',
-		'sea water',
-		'black pepper'
+		'sea water'
 	],
 	[
+		'fur',
 		'warm sand',
 		'a soft towel',
-		'the point of a pin',
 		'icy water',
-		'fur'
+		'the point of a pin'
 	],
 	[
 		'relaxing in a warm bath',
-		'having a sore throat',
-		'threading a needle',
+		'walking briskly in the cold',
 		'jumping into a swimming pool',
-		'walking briskly in the cold'
+		'having a sore throat',
+		'threading a needle'
 	],
 	[
 		'excited',
 		'relieved',
+		'scared',
 		'furious',
-		'in love',
-		'scared'
+		'in love'
 	]
 ];
 
