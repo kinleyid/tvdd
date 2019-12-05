@@ -188,7 +188,7 @@ var questions = [
 	'Some people have the experience of finding new things among their belongings that they do not remember buying.',
 	'Some people sometimes find that they are approached by people that they do not know, who call them by another name or insist that they have met them before.', 
 	'Some people sometimes have the experience of feeling as though they are standing next to themselves or watching themselves do something and they actually see themselves as if they were looking at another person.', 
-	'Some people are told that they sometimes do not recognize friends of family members.',
+	'Some people are told that they sometimes do not recognize friends or family members.',
 	'Some people find that they have no memory for some important events in their lives (for example, a wedding or graduation).', 
 	'Some people have the experience of being accused of lying when they do not think that they have lied.',
 	'Some people have the experience of looking in a mirror and not recognizing themselves.',
