@@ -32,10 +32,12 @@ var timeline = [];
 	SET FULLSCREEN
 */
 
-timeline.push({
+fullscreen = {
 	type: 'fullscreen',
 	fullscreen_mode: true
-});
+};
+
+timeline.push(fullscreen);
 
 /*
 	DEMOGRAPHIC INFO
@@ -244,8 +246,7 @@ var eft_criteria = '1. You have actually planned or could realistically happen</
 	'3. Would happen at a specific place</br>' +
 	'4. Would not last longer than a day</br>' +
 	'5. Are distinct and have not happened yet';
-
-timeline.push({
+var eft_instructions = {
 	type: 'instructions',
 	pages: [
 		'Now you will be shown some cue words and, in response, you will come up with future events that could happen to you.',
@@ -263,7 +264,9 @@ timeline.push({
 			'3. Meeting up with someone to buy a used textbook',
 	],
 	show_clickable_nav: true
-});
+};
+
+timeline.push(eft_instructions);
 
 /*
 	EFT TASK
@@ -272,8 +275,9 @@ timeline.push({
 var cue_words = ['ANIMAL','APPLE','ARM','ARMY','ARTIST','AUTOMOBILE','AVENUE','BABY','BAR','BATH','BEAR','BED','BIRD','BLACK','BLOOD','BLUE','BOARD','BODY','BOOK','BOTTLE','BOWL','BOY','BRAIN','BREAD','BREAST','BUILDING','BURN','BUTTER','CAMP','CANDY','CAR','CARS','CASH','CAT','CELL','CHAIR','CHEESE','CHILD','CHILDREN','CHRISTMAS','CHURCH','CIRCLE','CITY','CLOCK','CLOTHING','COAST','COFFEE','COIN','COLLEGE','CORN','CORNER','COTTAGE','DARK','DIAMOND','DINNER','DOCTOR','DOGS','DOLL','DOLLAR','DOOR','DOORS','DRESS','DUST','EARTH','ENGINE','FACTORY','FAMILY','FAT','FEET','FINGERS','FIRE','FLAG','FLOOD','FLOWER','FOOT','FOREHEAD','FOREST','FORK','FRIEND','FRUIT','FUR','FURNITURE','GENTLEMAN','GIFT','GIRL','GOLD','GRANDMOTHER','GRASS','GREEN','GUNS','HALL','HAND','HANDS','HEAD','HOME','HORSE','HOSPITAL','HOT','HOTEL','HOUSE','HUSBAND','INDUSTRY','INSECT','INSTRUMENT','IRON','JUDGE','KING','KISS','LADIES','LAKE','LAMP','LETTER','LIBRARY','LIGHT','LIP','LIQUOR','LOVE','MACHINE','MAGAZINE','MAN','MARRIAGE','MARRIED','MEAT','METAL','MONEY','MOON','MORNING','MOTHER','MOUNTAIN','NAIL','NEEDLE','NEWSPAPER','NOVEL','OCEAN','OFFICE','OFFICER','OVEN','PAINT','PAPER','PARENTS','PARTY','PEACH','PENCIL','PEOPLE','PERSON','PHOTOGRAPH','PHYSICIAN','PICTURE','PIPE','PLANT','POTATO','PROFESSOR','PUPIL','QUARTER','QUEEN','RED','RIVER','ROCK','ROD','ROOM','SALT','SEA','SEAT','SHADOW','SHIP','SHOES','SHORE','SHOULDER','SKIN','SKY','SNOW','SOIL','SON','SQUARE','STAR','STEAM','STONE','STORM','STOVE','STREET','STRING','STUDENT','SUGAR','TABLE','TEACHER','TICKET','TOBACCO','TOOL','TOY','TREE','UNIVERSITY','VEGETABLE','WALL','WATER','WEAPON','WHEAT','WHITE','WIFE','WINDOW','WINE','WINTER','WOMAN','WORLD','YELLOW',];
 var delays = ['1 week', '1 month', '6 months', '12 months'];
 var event_titles = []; // Participant's event titles
+var pick_title, elaboration;
 for (i = 0; i < delays.length; i++) {
-	timeline.push({ // Trial for participants to decide on an event title
+	pick_title = { // Trial for participants to decide on an event title
 		type: 'survey-text',
 		preamble:
 			'<br>Cue: <b>' + cue_words.splice(Math.floor(cue_words.length*Math.random()), 1)[0] + '</b>' +
@@ -287,8 +291,9 @@ for (i = 0; i < delays.length; i++) {
 			var resp = JSON.parse(data.responses);
 			event_titles.push(resp.Q0);
 		}
-	});
-	timeline.push({ // Event elaboratoin
+	};
+	timeline.push(pick_title);
+	elaboration = { // Event elaboration
 		type:'survey-text',
 		on_start: function(trial) {
 			// Set preamble to title from previous trial
@@ -300,14 +305,15 @@ for (i = 0; i < delays.length; i++) {
 			rows: 10,
 			columns: 100
 		}]
-	})
+	};
+	timeline.push(elaboration);
 }
 
 /*
 	POST-EFT TASK
 */
 
-timeline.push({ // Post-EFT task instructions
+var post_eft_instructions = { // Post-EFT task instructions
 	type: 'instructions',
 	pages: [
 		'Now you will be asked questions about the events you came up with. Please do not try to change your imagination of the events based on the questions. Instead, answer them based on the mental images you already had.',
@@ -315,7 +321,9 @@ timeline.push({ // Post-EFT task instructions
 		'Some of these questions ask about visual perspective. When we imagine events, we can see them from different points of view in our mind’s eye. If we see the scene from the point of view of our own eyes, this is called a “first-person” perspective. If we see it from any other point of view, this is called a “third-person” perspective. Sometimes we switch back and forth between the two.'
 	],
 	show_clickable_nav: true
-});
+};
+
+timeline.push(eft_post_instructions);
 
 var post_eft_qs = [
 	'Was your mental image of the event faint or vivid?',
@@ -350,9 +358,10 @@ function update_iterators() {
 	}
 }
 
+var curr_trial;
 for (i = 0; i < delays.length; i++) { // Questions for each event title
 	for (j = 0; j < post_eft_qs.length; j++) {
-		timeline.push({
+		curr_trial = {
 			conditional_function: function() {
 				// Only display the third-person question if it's applicable
 				if (post_eft_iterators.j == post_eft_qs.length - 1) {
@@ -381,7 +390,8 @@ for (i = 0; i < delays.length; i++) { // Questions for each event title
 					update_iterators();
 				}
 			}]
-		})
+		};
+		timeline.push(curr_trial);
 	}
 }
 
@@ -469,13 +479,13 @@ var dd_loop = {
 	timeline: [dd_trial],
 	loop_function: function(data) {
 		if (dd_data.trial_count == dd_data.max_trials) { // Increment the delay counter
+			if (dd_data.cued[dd_data.delay_count]) {
+				dd_data.cue_count++;
+			}
 			dd_data.delay_count++;
 			if (dd_data.delay_count == dd_data.delays.length) { // Exit if we're done all the delays
 				return false;
 			} // Else reset everything
-			if (dd_data.cued[dd_data.delay_count]) {
-				dd_data.cue_count++;
-			}
 			dd_data.trial_count = 0;
 			dd_data.immediate_value = dd_data.mon_amts[0];
 		}
